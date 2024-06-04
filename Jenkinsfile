@@ -45,11 +45,11 @@ pipeline {
                     -executeMethod ExportTool.ExportXcodeProject \
                     -projectPath "./"
                 echo "===Zipping Xcode project"
-                zip -q -r -0 visionOSProj visionOSProj
+                zip -q -r -0 visionOSBuild visionOSBuild
                 '''
                 // pick up archive xcode project
                 dir('') {
-                    stash includes: 'visionOSProj.zip', name: 'xcode-project'
+                    stash includes: 'visionOSBuild.zip', name: 'xcode-project'
                 }
             }
             post {
@@ -69,7 +69,7 @@ pipeline {
                 label 'mac'
             }
             environment {
-                PROJECT_FOLDER = 'visionOSProj'
+                PROJECT_FOLDER = 'visionOSBuild'
                 CERT_PRIVATE = credentials('priv')
                 CERT_SIGNATURE = credentials('development')
                 BUILD_SECRET_JSON = credentials('visionos-build-secret')
@@ -82,7 +82,7 @@ pipeline {
                 ls -l
                 # Remove old project and unpack a new one
                 sudo rm -rf ${PROJECT_FOLDER}
-                unzip -q visionOSProj.zip
+                unzip -q visionOSBuild.zip
                 '''
 
                 // create export options file
@@ -170,7 +170,7 @@ pipeline {
                         rm keychain.txt
                     fi
                     '''
-                    archiveArtifacts artifacts: 'visionOSProj/build/Unity-VisionOS.zip', onlyIfSuccessful: true, caseSensitive: false
+                    archiveArtifacts artifacts: 'visionOSBuild/build/Unity-VisionOS.zip', onlyIfSuccessful: true, caseSensitive: false
                 }
             }
         }
