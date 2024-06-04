@@ -111,7 +111,7 @@ pipeline {
                 TEAM_ID=$(echo $BUILD_SECRET_JSON | jq -r '.TEAM_ID')
                 BUNDLE_ID=$(echo $BUILD_SECRET_JSON | jq -r '.BUNDLE_ID')
                 # extra backslash for groovy
-                sed -i "" "s/DEVELOPMENT_TEAM = \\"\\"/DEVELOPMENT_TEAM = $TEAM_ID/g" Unity-iPhone.xcodeproj/project.pbxproj
+                sed -i "" "s/DEVELOPMENT_TEAM = \\"\\"/DEVELOPMENT_TEAM = $TEAM_ID/g" Unity-VisionOS.xcodeproj/project.pbxproj
                 #############################################
                 # setup certificates in a temporary keychain
                 #############################################
