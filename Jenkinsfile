@@ -6,7 +6,7 @@ pipeline {
             agent {
                 docker {
                     image "${ECR_REPOSITORY_URL}:latest"
-                    args '--entrypoint= '
+                    args '-u 0 --entrypoint= '
                     registryCredentialsId "ecr:${AWS_REGION}:ecr-role"
                     registryUrl "$ECR_REGISTRY_URL"
                 }
