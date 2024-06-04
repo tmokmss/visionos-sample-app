@@ -22,15 +22,7 @@ pipeline {
                 apt-get update
                 apt-get install -y curl unzip zip jq
 
-                curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-                unzip -q -o awscliv2.zip
-                ./aws/install
-
-                # S3にファイルを配置する例
-                echo 'File sharing via S3 example' > /tmp/sample.txt
-                aws s3 cp /tmp/sample.txt s3://${ARTIFACT_BUCKET_NAME}/s3_sample.txt
-
-                # Unity Build Serverからライセンスを取得:
+                # Create config file for acquiring Unity Build Server floating licenses:
                 mkdir -p /usr/share/unity3d/config/
                 echo '{
                 "licensingServiceBaseUrl": "'"$UNITY_BUILD_SERVER_URL"'",
@@ -54,8 +46,6 @@ pipeline {
             }
             post {
                 always {
-                    // Unity Build Server利用時は明示的なライセンス返却処理は不要
-                    // sh 'unity-editor -quit -returnlicense'
                     sh 'chmod -R 777 .'
                 }
             }
@@ -100,12 +90,7 @@ pipeline {
                 sh '''
                 # set -xe
                 source ~/.zshrc
-                # 必要なパスを通す
                 export PATH=/usr/local/bin:/opt/homebrew/bin:\${PATH}
-
-                # S3からファイルを取得する例
-                aws s3 cp s3://${ARTIFACT_BUCKET_NAME}/s3_sample.txt /tmp/s3_sample.txt
-                echo /tmp/s3_sample.txt
 
                 cd ${PROJECT_FOLDER}
                 TEAM_ID=$(echo $BUILD_SECRET_JSON | jq -r '.TEAM_ID')
