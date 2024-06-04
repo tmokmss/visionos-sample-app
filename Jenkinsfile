@@ -59,7 +59,7 @@ pipeline {
                 }
             }
         }
-        stage('build and sign iOS app on mac') {
+        stage('build and sign visionOS app on mac') {
             // we don't need the source code for this stage
             options {
                 skipDefaultCheckout()
@@ -68,10 +68,10 @@ pipeline {
                 label 'mac'
             }
             environment {
-                PROJECT_FOLDER = 'iOSProj'
+                PROJECT_FOLDER = 'visionOSProj'
                 CERT_PRIVATE = credentials('priv')
                 CERT_SIGNATURE = credentials('development')
-                BUILD_SECRET_JSON = credentials('ios-build-secret')
+                BUILD_SECRET_JSON = credentials('visionos-build-secret')
             }
             steps {
                 unstash 'xcode-project'
@@ -81,7 +81,7 @@ pipeline {
                 ls -l
                 # Remove old project and unpack a new one
                 sudo rm -rf ${PROJECT_FOLDER}
-                unzip -q iOSProj.zip
+                unzip -q visionOSProj.zip
                 '''
 
                 // create export options file
@@ -153,9 +153,9 @@ pipeline {
                 echo ===Building
                 pwd
 
-                xcodebuild -scheme Unity-iPhone -sdk iphoneos -configuration AppStoreDistribution archive -archivePath "$PWD/build/Unity-iPhone.xcarchive" CODE_SIGN_STYLE="Manual" CODE_SIGN_IDENTITY=$CODE_SIGN_IDENTITY OTHER_CODE_SIGN_FLAGS="--keychain=$MY_KEYCHAIN" -UseModernBuildSystem=0 CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED=NO
+                xcodebuild -scheme Unity-VisionOS -sdk visionos -configuration AppStoreDistribution archive -archivePath "$PWD/build/Unity-VisionOS.xcarchive" CODE_SIGN_STYLE="Manual" CODE_SIGN_IDENTITY=$CODE_SIGN_IDENTITY OTHER_CODE_SIGN_FLAGS="--keychain=$MY_KEYCHAIN" -UseModernBuildSystem=0 CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED=NO
 
-                zip -r build/Unity-iPhone.zip build/Unity-iPhone.xcarchive
+                zip -r build/Unity-VisionOS.zip build/Unity-VisionOS.xcarchive
                 '''
             }
             post {
@@ -169,7 +169,7 @@ pipeline {
                         rm keychain.txt
                     fi
                     '''
-                    archiveArtifacts artifacts: 'iOSProj/build/Unity-iPhone.zip', onlyIfSuccessful: true, caseSensitive: false
+                    archiveArtifacts artifacts: 'visionOSProj/build/Unity-VisionOS.zip', onlyIfSuccessful: true, caseSensitive: false
                 }
             }
         }
