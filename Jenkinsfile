@@ -153,8 +153,9 @@ pipeline {
                 #############################################
                 echo ===Building
                 pwd
-
-                xcodebuild -scheme Unity-VisionOS -sdk xros1.2 -configuration AppStoreDistribution archive -archivePath "$PWD/build/Unity-VisionOS.xcarchive" CODE_SIGN_STYLE="Manual" CODE_SIGN_IDENTITY=$CODE_SIGN_IDENTITY OTHER_CODE_SIGN_FLAGS="--keychain=$MY_KEYCHAIN" -UseModernBuildSystem=0 CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED=NO
+                SDK=xrsimulator1.2
+                #SDK=xros1.2
+                xcodebuild -scheme Unity-VisionOS -sdk $SDK -configuration AppStoreDistribution archive -archivePath "$PWD/build/Unity-VisionOS.xcarchive" CODE_SIGN_STYLE="Manual" CODE_SIGN_IDENTITY=$CODE_SIGN_IDENTITY OTHER_CODE_SIGN_FLAGS="--keychain=$MY_KEYCHAIN" -UseModernBuildSystem=0 CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED=NO
 
                 zip -r build/Unity-VisionOS.zip build/Unity-VisionOS.xcarchive
                 '''
