@@ -5,6 +5,7 @@ pipeline {
         stage('build Unity project on spot') {
             agent {
                 docker {
+                    label 'linux'
                     image "${ECR_REPOSITORY_URL}:latest"
                     args '-u 0 --entrypoint= '
                     registryCredentialsId "ecr:${AWS_REGION}:ecr-role"
