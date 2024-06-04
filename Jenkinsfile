@@ -5,9 +5,10 @@ pipeline {
         stage('build Unity project on spot') {
             agent {
                 docker {
-                    image 'unityci/editor:2021.3.14f1-ios-1.0'
-                    args '-u root:root'
-                    label 'linux'
+                    image "${ECR_REPOSITORY_URL}:latest"
+                    args '--entrypoint= '
+                    registryCredentialsId "ecr:${AWS_REGION}:ecr-role"
+                    registryUrl "$ECR_REGISTRY_URL"
                 }
             }
 
